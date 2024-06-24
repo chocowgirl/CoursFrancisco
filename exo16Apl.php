@@ -32,7 +32,7 @@
 // else{
 //     print("It's freezing!  Turn the heat on!");
 // }
-// // prof prefers that we go from low to high splits or from high to low (to not miss anything.)
+// // **** prof prefers that we go from low to high splits or from high to low (to not miss anything.)
 // //if temp < 15 froid, elseif temp < 25 bon, else chaud
 #######################################
 

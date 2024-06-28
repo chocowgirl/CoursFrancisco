@@ -1,5 +1,5 @@
 <nav>
-        <a href="./acceuil.php">Acceuil</a>
+        <a href="./accueil.php">Accueil</a>
         <a href="./filmInserer.php">Inserer un film</a>
         <a href="./filmRecherche.php">Chercher un film</a>
         <a href="./filmRechercheAJAX.php">Chercher un film (AJAX)</a>

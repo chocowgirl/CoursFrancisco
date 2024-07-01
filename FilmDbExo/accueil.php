@@ -60,8 +60,8 @@ foreach ($arrayFilms as $film){
     print("<li>Duree: " . $film['duree'] . "</li>");
     print("<img class='affiche' src='./uploads/" . $film['image'] . "'>");
     print("<br>");
-    //form pour noter le film
-    print("<input type='number' class='note'>");
+    //form pour noter le film ... à la fin nous avons décidé d'effacer la formulaire en dessous
+    // print("<input type='number' class='note'>");
 }
 print ("</ul>");
 

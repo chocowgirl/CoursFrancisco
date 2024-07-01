@@ -37,8 +37,8 @@
 // souvent on met ici une image decontractant et on met un lien pour rediriger l'user
         die("C'est la fin");
     }
-
-    $sql = "SELECT *, AVG(valeur) AS moyenne FROM film INNER JOIN note ON film.id = note.idFilm WHERE film.id= :id"; 
+//requete pour botenir la moyenne (de tous les utilisateurs)
+    $sql = "SELECT *, AVG(valeur) AS moyenne FROM film LEFT JOIN note ON film.id = note.idFilm WHERE film.id= :id"; 
 
     // SELECT AVG(valeur) AS moyenne FROM note WHERE idFilm=3; 
 
@@ -47,77 +47,55 @@
 
     $stmt->execute();
 
-    $film = $stmt->fetch(PDO::FETCH_ASSOC); //le premier(unique)resultat de la requete
+    $filmMoyenne = $stmt->fetch(PDO::FETCH_ASSOC);// le premier(unique)resultat de la requete
 
-    // var_dump($film);
-    print("<h1>" . $film['titre'] . "</h1>");
-    print("<p>" . $film['description'] . "</p>");
-    print("<p>Durée: " . $film['duree'] . "</p>");
-    print("<img class='affiche' src = './uploads/" .$film['image'] . "'>");
+// request pour obtain la note du film pour l'utlisateur connecté
+// obtenir l'utilisateur de la session
+    $idUtilsateur = $_SESSION['idUtilisateur'];
+
+    $sql = "SELECT * FROM note WHERE note.idUtilisateur=:idUtilisateur AND note.idFilm = :idFilm";
+    $stmt = $cnx->prepare($sql);
+    $stmt->bindValue(":idUtilisateur", $idUtilsateur);
+    $stmt->bindValue(":idFilm", $idFilm);
+
+    $stmt->execute();
+    //filmUtilisateur contiendra l'array d'un film ou false
+    $filmUtilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
     
+    var_dump($filmUtilisateur);
+    var_dump($filmMoyenne);
+
+
+
+    print("<h1>" . $filmMoyenne['titre'] . "</h1>");
+    print("<p>" . $filmMoyenne['description'] . "</p>");
+    print("<p>Durée: " . $filmMoyenne['duree'] . "</p>");
+    print("<img class='affiche' src = './uploads/" .$filmMoyenne['image'] . "'>");
     
-    print("moyenne: " . $film['moyenne']);
+
+    
+    print("moyenne: " . $filmMoyenne['moyenne']);
 // print("<div id='divNote'>blalb</div>");
-    print("<div>Valoration Utilisateurs<div data-moyenne='" . $film['moyenne'] .  "' id='divNote'></div></div>");
-    print("<div>Votre note: <div data-valeur='" . $film['valeur'] . "' id='divNoteUtilisateur'></div></div>");
+    print("<div>Valoration Utilisateurs<div data-moyenne='" . $filmMoyenne['moyenne'] .  "' id='divNote'></div></div>");
+
+    print("<div>Votre note: 
+    <div data-idfilm=". $idFilm . " data-valeur='" . ($filmUtilisateur ? $filmUtilisateur['valeur'] : "") . "' id='divNoteUtilisateur'></div>
+    <div>" . ($filmUtilisateur ? "" : "Pas de note") . "</div>");
+
+//controles pour le panier
+    print("<br><button id='btnRajouterPanier'>Rajouter</button>");
+    print("<select data-idfilm=" . $idFilm . " id='quantite'>");
+    for ($i = 1; $i <= 50; $i++){
+        print("<option value=" . $i . ">" . $i . "</option>");
+    }
+    print("</select>");
 
 
     ?>
 
-    <script>
-    //creation des étoiles dans le div
-    let divNote =document.getElementById("divNote");
-
-
-    let menuEtoiles = jSuites.rating(divNote, {
-        value: divNote.dataset.moyenne ,
-        tooltip:['Horrible', 'Moyen', 'Plutôt bien', 'Bon', 'Sublime']
-
-    });
-
-
-//detecter le click dans divNote et obtenir le nombre d'"etoiles puis mettre a jour la note pour ce film de cet utilisateur
-    let divNoteUtilisateur =document.getElementById("divNoteUtilisateur");
-
-
-
-    let menuEtoilesUtilisateur = jSuites.rating(divNoteUtilisateur, {
-        value: divNoteUtilisateur.dataset.valeur,
-        tooltip:['Horrible', 'Moyen', 'Plutôt bien', 'Bon', 'Sublime'],
-        onchange: stockerNote
-        });
-
-//faire appel AJAX pour inserer/mettre a jour la note de cet utilisateur pour ce film
-        function stockerNote(){
-            // console.log("appel"); used to check that console shows responsiveness until here
-            //verifier s'il s'agit d'une nouvelle note
-            let nouvelleNote = true;
-            if(divNoteUtilisateur.data.valeur !== ""){
-                nouvelleNote = false; //ce film est déjà noté par l'utilisateur
-            }
-
-
-            let xhr = new XMLHttpRequest();
-
-            xhr.onreadystatechange = function(){
-                if(xhr.readyState == 4){
-                    
-                    console.log("fini");
-                }
-            }
-
-            // on doit envoyer: s'il s'agit d'une nouvelle note: la note
-
-            xhr.open("GET", "./noteUpdate.php");
-            xhr.send();
-
-        }
-
-
-
-
-
-
-    </script>
+    <!-- <script src="notes.js"></script>
+    <script src="./panier.js"></script> -->
+    <script src="./js/notes.js"></script>
+    <script src="./js/panier.js"></script>
 </body>
 </html>

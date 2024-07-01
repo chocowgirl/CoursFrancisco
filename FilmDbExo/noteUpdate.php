@@ -1,5 +1,17 @@
 <?php
 
+
+// var_dump($_POST);//ceci peut être vu dans le network réponse
+// die();
+//The above we did to make sure the information passes correctly to this page
+
+session_start();
+
+$idFilm = $_POST['idFilm'];
+$valeur = $_POST['valeur'];
+$idUtilisateur = $_SESSION['idUtilisateur'];
+$nouvelleNote = $_POST['nouvelleNote'];
+
 //2. connecter à la base de données
 include "./db/config.php";
 
@@ -15,10 +27,19 @@ catch (Exception $e){
 }
 
 // $valeur = $_GET....
-$sql = "UPDATE note SET valeur=:valeur WHERE note.id = :id";
 
-$sql = "INSERT INTO note (id, valeur, idUtilisateur, idFilm) VALUES (null, :valeur, :idUtilisateur, :idFilm)";
+if($nouvelleNote ==="true"){
+    $sql = "INSERT INTO note (id, valeur, idUtilisateur, idFilm) VALUES (null, :valeur, :idUtilisateur, :idFilm)";
+}
+else{
+    $sql = "UPDATE note SET valeur = :valeur WHERE idUtilisateur = :idUtilisateur AND idFilm = :idFilm";
+}
+$stmt = $cnx->prepare($sql);
+$stmt->bindValue(":idUtilisateur", $idUtilisateur);
+$stmt->bindValue(":idFilm", $idFilm);
+$stmt->bindValue(":valeur", $valeur);
 
+$stmt->execute();
 
 
 

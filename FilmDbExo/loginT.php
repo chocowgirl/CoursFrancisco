@@ -59,6 +59,8 @@
 
     //obtenir le nom d'utilisateur (pour les acceuillir sur la page d'acceuil)
     $nomUtilisateur = $arrayUtilisateurs[0]['nom'];
+    //obtenir l'id de l'utilisateur
+    $idUtilisateur = $arrayUtilisateurs[0]['id'];
     
     if (password_verify($password, $passwordHashBD) ==false){
         //pw pas bon
@@ -67,10 +69,10 @@
     }
     else{
         //pw est ok!
-        //on va ecrire le nom d'utilisateur dans la session ($_SESSION)
+        //on va ecrire le nom d'utilisateur et son id dans la session ($_SESSION)
         //*****N'oublier pas de démarrer la session! (tout en haut)******
         $_SESSION['nomUtilisateur'] = $nomUtilisateur;
-
+        $_SESSION['idUtilisateur'] = $idUtilisateur;
         //Here we check that it's working: 
         // var_dump($_SESSION);
         // die();

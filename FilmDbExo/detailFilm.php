@@ -16,8 +16,9 @@
     <?php
 
 
-    include"./checkSession.php";
+
     include"./nav.php";
+    include"./checkSession.php";
 
 
 //obtenir les donnees du formulaire, dans ce cas, l'id du film
@@ -84,11 +85,12 @@
 
 //controles pour le panier
     print("<br><button id='btnRajouterPanier'>Rajouter</button>");
-    print("<select data-idfilm=" . $idFilm . " id='quantite'>");
+    print("<select data-idfilm=" . $idFilm . " id='selectQuantite'>");
     for ($i = 1; $i <= 50; $i++){
         print("<option value=" . $i . ">" . $i . "</option>");
     }
     print("</select>");
+
 
 
     ?>

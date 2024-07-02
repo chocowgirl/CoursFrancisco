@@ -8,8 +8,8 @@
 </head>
 <body>
 <?php
-        include"./checkSession.php";
         include"./nav.php";
+        include"./checkSession.php";
 
     ?>
     <form action="filmRechercheT.php" method="POST">

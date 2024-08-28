@@ -7,7 +7,10 @@
 </head>
 <body>
     <?php
-    include_once "./classes/utilisateur.php";
+    // include_once "./classes/utilisateur.php";
+
+    require "./vendor/autoload.php";
+
     $utilisateur1 = new Utilisateur(
         ['id'=>012345,
         'nom'=>'Jessica',

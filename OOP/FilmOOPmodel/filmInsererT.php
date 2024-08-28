@@ -8,10 +8,11 @@
 <body>
     <?php
 
-    include_once ("./classes/FilmManager.php");
-    include_once ("./classes/film.php");
+    // include_once ("./classes/FilmManager.php");
+    // include_once ("./classes/film.php");
+    require "./vendor/autoload.php";
 
-    var_dump($_POST);
+    // var_dump($_POST);
 
     $titre = $_POST['titre'];
     $duree = $_POST['duree'];

@@ -7,8 +7,11 @@
 </head>
 <body>
     <?php
-    include_once "./classes/film.php";
-    include_once "./classes/FilmManager.php";
+    // include_once "./classes/film.php";
+    // include_once "./classes/FilmManager.php";
+
+    require "./vendor/autoload.php";
+
     $film1 = new Film(
         ['titre'=> 'Coco',
         'description'=> 'film sur le Mexique',

@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    Today is {{now.format("Y-m-d")}}
+
+    {{dump(now)}}
+
+    Today is also {{now.format("D-d-M-Y")}}
+
+    {# L'heure est {{now.format(hh)}} #}
+
+{% endblock %}

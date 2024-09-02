@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <a href="{{ path ('accueil') }}">Vers l'accueil</a>
+    <a href="{{ path ('accueilNomProfession',{nom:'Luca', profession:'formateur'}) }}">
+        Vers l'accueil avec nom et profession
+    </a>
+
+
+{% endblock %}

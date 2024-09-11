@@ -2,13 +2,12 @@
 
 namespace App\DataFixtures;
 
-use DateTime;
 use Faker\Factory;
-use App\Entity\Aeroport;
+use App\Entity\Livre;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
-class AeroportFixtures extends Fixture
+class LivreFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
@@ -16,17 +15,21 @@ class AeroportFixtures extends Fixture
 
         for ($i = 0; $i<100; $i++)
         {
-            $aeroport = new Aeroport(
-                ['nom' => $faker->city(),
-                'code' => $faker->countryISOAlpha3(),
+            $livre = new Livre(
+                ['titre' => $faker->sentence(3),
+                'prix' => $faker->randomFloat(2,10,100),
+                //ou on peut utiliser simplement mt_rand(20,100)
                 'description' => $faker->text(),
-                'dateMiseEnService' => $faker->DateTime(),
+                'datePublication' => $faker->DateTime(),
+                'isbn'=> $faker->isbn13(),
                 //en utilisant l'hydrate, on envoie ce qu'on veut
                 ]
             );
-            $manager->persist($aeroport);
+            $manager->persist($livre);
         }
-                //un seul flush!
+        // $product = new Product();
+        // $manager->persist($product);
+
         $manager->flush();
     }
 }

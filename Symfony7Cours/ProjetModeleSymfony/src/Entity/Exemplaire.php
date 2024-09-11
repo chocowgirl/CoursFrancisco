@@ -20,6 +20,7 @@ class Exemplaire
 
     #[ORM\ManyToOne(inversedBy: 'exemplaires')]
     #[ORM\JoinColumn(nullable: false)]
+    //ceci au-dessus veut dire qu'une exemplaire ne peut pas exister si il n'est pas associé à une livre
     private ?Livre $livre = null;
 
     /**

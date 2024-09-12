@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello FormulairesController!{% endblock %}
+
+{% block body %}
+Form aeroport
+
+{{ form_start(formulaireAeroport) }}
+    {{form_row (formulaireAeroport.nom)}}
+    {{form_row (formulaireAeroport.code)}}
+    {{form_row (formulaireAeroport.description)}}
+    {{form_row (formulaireAeroport.dateMiseEnService)}}
+    {{form_row (formulaireAeroport.heureMiseEnService)}}
+    <input type="submit" value="Insérer">
+{{ form_end(formulaireAeroport)}}
+
+{# {{ form_end(formulaireAeroport, {render_rest:false}) }} #}
+{# The above line is if we only want to specify the appearance of certain rows #}
+
+{# si on met form start et puis form end, on aura TOUTE la formulaire. #}
+
+{# comment en twig #}
+
+
+{% endblock %}

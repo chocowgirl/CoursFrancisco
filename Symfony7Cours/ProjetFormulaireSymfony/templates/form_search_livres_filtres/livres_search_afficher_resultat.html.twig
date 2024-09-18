@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Resultat de la recherche{% endblock %}
+
+{% block body %}
+helloooo
+
+{{ dump(livres) }}
+
+{% for livre in livres %}
+    Titre: {{livre.titre}}
+    Prix: {{livre.prix}}
+    Description: {{livre.description}}
+{% endfor %}
+
+
+
+{% endblock %}

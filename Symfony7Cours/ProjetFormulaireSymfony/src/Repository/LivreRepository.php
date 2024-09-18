@@ -11,10 +11,25 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class LivreRepository extends ServiceEntityRepository
 {
+
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Livre::class);
     }
+
+    public function livresEntresDeuxPrix(array $filtres){
+       
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT l.titre, l.prix, l.description FROM App\Entity\Livre l WHERE l.prix BETWEEN :prixMin AND :prixMax AND l.titre LIKE :titre');
+        $query->setParameter ("prixMin", $filtres['prixMin']);
+        $query->setParameter ("prixMax", $filtres['prixMax']);
+        $query->setParameter ("titre", "%" . mb_strtoupper($filtres['titre']) . "%");
+        $livres = $query->getResult();
+        return $livres;
+    }
+
+    //Below is the typical function to make a filtered query - "query builder"
 
     //    /**
     //     * @return Livre[] Returns an array of Livre objects

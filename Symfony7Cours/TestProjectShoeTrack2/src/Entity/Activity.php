@@ -26,6 +26,14 @@ class Activity
     #[ORM\Column(nullable: true)]
     private ?float $activityChronoMin = null;
 
+    #[ORM\ManyToOne(inversedBy: 'activities')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'shoeActivities')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Shoepair $shoepairUsed = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +83,30 @@ class Activity
     public function setActivityChronoMin(?float $activityChronoMin): static
     {
         $this->activityChronoMin = $activityChronoMin;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getShoepairUsed(): ?Shoepair
+    {
+        return $this->shoepairUsed;
+    }
+
+    public function setShoepairUsed(?Shoepair $shoepairUsed): static
+    {
+        $this->shoepairUsed = $shoepairUsed;
 
         return $this;
     }

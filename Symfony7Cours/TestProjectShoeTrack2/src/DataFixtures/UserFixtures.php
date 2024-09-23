@@ -24,7 +24,7 @@ class UserFixtures extends Fixture
             $user->setPassword($this->passwordHasher->hashPassword($user,'lePassword'.$i));
             $user->setName("jojo" . $i);
             $user->setBirthdate(new \DateTime());
-
+            $this->addReference("user{$i}", $user);
             $manager->persist ($user);
         }
         // $product = new Product();

@@ -1,26 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello WelcomeController!{% endblock %}
+{% block title %}Welcome Controller! {% endblock %}
 
 {% block body %}
+{% include '/includes/nav.html.twig' %}
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
-
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>WELCOME, {{ app.user.name }}!</h1>
 
-    This friendly message is coming from:
+    What would you like to do today?
     <ul>
-        <li>Your controller at <code>C:/xampp/htdocs/Cours/Symfony7Cours/TestProjectShoeTrack2/src/Controller/WelcomeController.php</code></li>
-        <li>Your template at <code>C:/xampp/htdocs/Cours/Symfony7Cours/TestProjectShoeTrack2/templates/welcome/index.html.twig</code></li>
+        <li>Access run manager</li>
+        <br>
+        <li>Access shoe manager</li>
     </ul>
 </div>
 
     {% if app.user %}
         <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            <a href="{{ path('app_logout') }}">Logout</a>
         </div>
     {% endif %}
 {% endblock %}

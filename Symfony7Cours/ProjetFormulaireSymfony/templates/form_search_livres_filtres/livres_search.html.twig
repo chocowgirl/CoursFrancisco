@@ -4,20 +4,59 @@
 
 {% block body %}
 
-{{ form_start(form) }}
+{{ form_start(form, {'attr' : {'id': 'recherche_form'}}) }}
 {{form_row(form.titre)}}
 {{form_row(form.prixMin)}}
 {{form_row(form.prixMax)}}
 <input type="submit" value="Chercher!">
 {{ form_end(form) }}
 
-
+<div id='resultat'></div>
 {# //on peut utiliser un for boucle afin d'afficher les elements #}
 
 {# {{% for item in items %}
     
 {% endfor %}} #}
-    
+<script>
+let form = document.getElementById('recherche_form');
+
+form.addEventListener('input', function(){
+    console.log ('on a modifié le form');
+
+    let formData = new FormData (form);
+
+    //obtenir le div qui contiendra le resultat
+    let divResultat = document.getElementById('resultat');
+    // divResultat.innerHtml = "";
+    axios.post ('/livres/search', formData)
+        .then ( response => {
+            //quoi faire avec la reponse:
+            console.log (response.data);
+            // pas besoin de parser car axios le fait par defaut
+            
+            //ceci est déja un array d'objets
+            let arrLivres = response.data
+
+            //vider le div
+            divResultat.innerHTML = "";
+
+            let ul = document.createElement ('ul');
+
+
+            for (index in arrLivres){
+                let li = document.createElement ('li');
+                li.innerText = arrLivres[index].titre + ", " + arrLivres[index].prix + " euros";
+                ul.appendChild (li);
+            }
+
+            divResultat.appendChild(ul);
+
+        });
+
+});
+
+
+</script>
 
 
 {% endblock %}

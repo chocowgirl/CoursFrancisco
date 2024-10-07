@@ -1,12 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello RunManagerController!
-{% endblock %}
+{% block title %}Hello ShoeManagerController!{% endblock %}
 
 {% block body %}
-	Run manager
+Shoe manager
 
-	<style>
+<style>
 		.container {
 			display: flex;
 			flex-wrap: wrap;
@@ -65,34 +64,32 @@
             background-color: red;
             color: white;
         }
-	</style>
+</style>
 
-	{% for activity in activities %}
+	{% for shoe in shoes %}
 
 		<div class="container">
-			<div class="item">
-				{{ activity.activityDate.format("Y/m/d") }}
+			<div class="item-large">
+				{{ shoe.nameBrandModel}}
 			</div>
 			<div class="item">
-				{{ activity.activityDistanceKm }}
+				{{ shoe.currentWearKm }}
 			</div>
 			<div class="item">
-				{{ activity.activityChronoMin }}
+				{{ shoe.inActiveService }}
 			</div>
 			{# {{ dump (activity.shoepairUsed)}} #}
 			{# {{ dump (activity.activityDate)}} #}
-			<div class="item-large">
-				{{ activity.shoepairUsed.nameBrandModel }}
-			</div>
 			<div class="edit-button">
 				<button>edit</button>
-				<a href="{{ path('update_activity', {id: activity.id} )}}"><img src="edit-icon.png" alt="edit-icon" />edit</a>
+				{# <a href="{{ path('update_shoe', {id: activity.id} )}}"><img src="edit-icon.png" alt="edit-icon" />edit</a> #}
 			</div>
 			<div class="notes">
-				{{activity.activityNote }}
+				{{shoe.shoeNote }}
 			</div>
 		</div>
 
 	{% endfor %}
+
 
 {% endblock %}

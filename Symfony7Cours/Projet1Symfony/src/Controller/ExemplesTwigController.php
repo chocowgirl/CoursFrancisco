@@ -54,7 +54,7 @@ class ExemplesTwigController extends AbstractController
     public function exoTva(Request $req) {
         $prix = $req->get ('prix');
         $tauxTVA = $req->get ('tauxTva');
-        $prixTvac = $prix + $prix * ($tauxTVA/100);
+        $prixTvac = $prix * (1 + $tauxTVA/100);
 
         $vars = ['prixTvac'=>$prixTvac];
 

@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+
+Edit shoe
+
+
+
+
+
+{{ form_start (form) }}
+{{ form_widget (form) }}
+
+
+
+<input type="submit" class="btn" value="Submit Edit" />
+{{ form_end (form) }}
+
+
+
+
+	<div class="homebtn">
+		<a href="{{ path('app_welcome')}}">🏠</a>
+	<div>
+
+{% endblock %}

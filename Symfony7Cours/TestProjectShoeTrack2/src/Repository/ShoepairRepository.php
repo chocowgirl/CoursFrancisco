@@ -31,6 +31,17 @@ class ShoepairRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+    //    public function findShoeByUser(int $userOwnerId): ?Shoepair
+    //    {
+    //        return $this->createQueryBuilder('s')
+    //            ->andWhere('s.user = :userOwnerId')
+    //            ->setParameter('userOwnerId', $userOwnerId)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+
     //    public function findOneBySomeField($value): ?Shoepair
     //    {
     //        return $this->createQueryBuilder('s')

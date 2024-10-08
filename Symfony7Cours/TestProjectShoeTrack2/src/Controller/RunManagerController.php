@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 class RunManagerController extends AbstractController
 {
 
-
-
     #[Route('/run/manager', name: 'app_run_manager')]
     public function indexRuns(ManagerRegistry $doctrine): Response
     {
@@ -41,15 +39,13 @@ class RunManagerController extends AbstractController
     ): Response {
         // on obtient d'abord le run
         $activity = $rep->find($req->get('id'));
-
-        $form = $this->createForm(ActivityType::class, $activity);
+        $user = $this->getUser();
+        $form = $this->createForm(ActivityType::class, $activity,
+    );
 
         $form->handleRequest($req);
-
         $vars = ['form' => $form];
-
         // dd($form->getErrors());
-
         if ($form->isSubmitted() && $form->isValid()) {
             $doctrine->getManager()->flush();
 
@@ -58,6 +54,26 @@ class RunManagerController extends AbstractController
         return $this->render("run_manager/edit_run.html.twig", $vars);
     }
 
+    #[Route("/run/manager/delete/{id}", name: 'delete_activity')]
+    public function deleteActivity(
+        ActivityRepository $rep,
+        Request $req,
+        ManagerRegistry $doctrine
+    ): Response {
+        // Retrieve the activity by ID
+        $activity = $rep->find($req->get('id'));
+    
+        // Check if the activity exists
+        if (!$activity) {
+            throw $this->createNotFoundException('No activity found for id ' . $req->get('id'));
+        }
+        // Use the EntityManager to remove the activity
+        $entityManager = $doctrine->getManager();
+        $entityManager->remove($activity);
+        $entityManager->flush();  // Apply the delete operation to the database
+        // Redirect to a specific route after deletion
+        return $this->redirectToRoute("app_run_manager");
+    }
 
     #[Route("/run/manager/create", name: 'create_activity')]
     public function createActivity(
@@ -65,11 +81,11 @@ class RunManagerController extends AbstractController
         Request $req,
         ManagerRegistry $doctrine
     ): Response {
-        // on obtient d'abord le run
+        // we first create the run
         $activity = new Activity();
 
         $form = $this->createForm(ActivityType::class, $activity);
-
+        //do I need to pass through the user?
         $form->handleRequest($req);
 
         $vars = ['form' => $form];
@@ -82,20 +98,8 @@ class RunManagerController extends AbstractController
 
             return $this->redirectToRoute("app_run_manager");
         }
-        return $this->render("run_manager/edit_run.html.twig", $vars);
+        return $this->render("run_manager/create_run.html.twig", $vars);
     }
 }
 
-// #[Route ("/exemples/modele/exemple/find/all")]
-// public function exempleFindAll(ManagerRegistry $doctrine)
-// {
-//     $em = $doctrine->getManager();
-//     $rep = $em->getRepository(Livre::class);
 
-//     // notez que findBy renverra toujours un array même s'il trouve 
-//     // qu'un objet
-//     $livres = $rep->findAll();
-//     $vars = ['livres' => $livres];
-
-//     return $this->render("exemples_modele/exemple_find_all.html.twig", $vars);
-// }

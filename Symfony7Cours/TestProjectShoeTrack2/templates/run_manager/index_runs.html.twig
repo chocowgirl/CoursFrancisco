@@ -7,23 +7,46 @@
 	Run manager
 
 	<style>
+		.runlegend {
+			display: flex;
+			padding:10px
+			width:400px;
+			font-family: Arial, sans-serif;
+			margin:10px
+		}
+
+		.runlegendItem {
+			text-align:center;
+			color:white;
+			padding:3px;
+			border-radius:10px;
+			min-width: 80px;
+			background-color: #e53935;
+			margin:10px;
+		}
+
 		.container {
 			display: flex;
 			flex-wrap: wrap;
 			background-color: #f0f0f0;
 			border-radius: 15px;
+			border-color: gray;
+			border-style: solid;
+			border-width: 1px;
 			padding: 10px;
 			width: 400px;
 			gap: 10px;
 			font-family: Arial, sans-serif;
+			margin:10px;
 		}
 		.item {
-			background-color: #cccccc;
+			background-color: #a0a0a0;
 			border-radius: 10px;
 			padding: 10px;
 			text-align: center;
 			flex: 1;
 			min-width: 80px;
+			color:white;
 		}
 		.item-large {
 			flex: 2;
@@ -41,7 +64,8 @@
 			padding: 10px;
 			text-align: left;
 			flex: 1;
-			min-width: 350px;
+			min-width: 300px;
+			color:white;
 		}
 		.edit-button {
 			background-color: #e53935;
@@ -65,8 +89,52 @@
             background-color: red;
             color: white;
         }
-	</style>
 
+		.btnContainer {
+			display:flex;
+			width: 500px;
+			height: 50
+		}
+		.homebtn {
+			background-color:#a0a0a0;
+			width : 30px;
+			height : 30px;
+			border-radius: 15px;
+			text-align:center;
+			border-color: dark-gray;
+			border-style: solid;
+			border-width: 1px;
+		}
+
+		.createRunBtn {
+			background-color: #a0a0a0;
+			border-radius: 10px;
+			border-color: dark-gray;
+			border-style: solid;
+			border-width: 1px;
+			padding: 5px;
+			text-align: center;
+			min-width: 90px;
+			margin-left: 50px;
+		}
+	</style>
+	
+	<div class='btnContainer'>
+		<div class="homebtn">
+			<a href="{{ path('app_welcome')}}">🏠</a>
+		<div>
+
+		<div class="createRunBtn">
+			<a href="{{ path ('create_activity') }}">Add new run</a>
+		</div>
+	</div>
+
+	<div class="runlegend">
+		<div class="runlegendItem">Date</div>
+		<div class="runlegendItem">Dist.</div>
+		<div class="runlegendItem">Chrono</div>
+		<div class="runlegendItem">Shoe</div>
+	</div>
 	{% for activity in activities %}
 
 		<div class="container">
@@ -85,8 +153,8 @@
 				{{ activity.shoepairUsed.nameBrandModel }}
 			</div>
 			<div class="edit-button">
-				<button>edit</button>
-				<a href="{{ path('update_activity', {id: activity.id} )}}"><img src="edit-icon.png" alt="edit-icon" />edit</a>
+				{# <button>edit</button> #}
+				<a href="{{ path('update_activity', {id: activity.id} )}}">edit</a>
 			</div>
 			<div class="notes">
 				{{activity.activityNote }}

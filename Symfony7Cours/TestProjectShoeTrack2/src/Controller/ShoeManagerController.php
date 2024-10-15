@@ -23,7 +23,7 @@ class ShoeManagerController extends AbstractController
         //qu'un objet
         $shoes = $rep->findBy(
             ['userOwner' => $this->getUser()],
-            ["currentWearKm" => "DESC"]
+            ["currentWearKm" => "DESC"],
         );
         $vars = ['shoes' => $shoes];
 
@@ -31,7 +31,7 @@ class ShoeManagerController extends AbstractController
     }
 
     #[Route("/shoe/manager/update/{id}", name: 'update_shoe')]
-    public function updateActivity(
+    public function updateShoe(
         ShoepairRepository $rep,
         Request $req,
         ManagerRegistry $doctrine
@@ -55,4 +55,38 @@ class ShoeManagerController extends AbstractController
         }
         return $this->render("shoe_manager/edit_shoe.html.twig", $vars);
     }
+
+
+    #[Route("/shoe/manager/create", name: 'create_shoe')]
+    public function createShoe(
+        ShoepairRepository $rep,
+        Request $req,
+        ManagerRegistry $doctrine
+    ): Response {
+
+        
+        // we first create the shoe
+        $shoepair = new Shoepair();
+        
+        $form = $this->createForm(ShoepairType::class, $shoepair);
+        //do I need to pass through the user?
+        $form->handleRequest($req);
+
+        $vars = ['form' => $form];
+
+        // dd($form->getErrors());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // dd();
+            $doctrine->getManager()->persist($shoepair);
+            $doctrine->getManager()->flush();
+
+            return $this->redirectToRoute("app_shoe_manager");
+        }
+        return $this->render("shoe_manager/create_shoe.html.twig", $vars);
+    }
+
+
+
+
 }

@@ -3,13 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Activity;
+use App\Entity\Shoepair;
 use App\Form\ActivityType;
+use App\Form\SearchRunsType;
 use App\Repository\ActivityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 class RunManagerController extends AbstractController
 {
@@ -81,6 +83,7 @@ class RunManagerController extends AbstractController
         Request $req,
         ManagerRegistry $doctrine
     ): Response {
+
         // we first create the run
         $activity = new Activity();
 
@@ -100,6 +103,160 @@ class RunManagerController extends AbstractController
         }
         return $this->render("run_manager/create_run.html.twig", $vars);
     }
+
+    
+    #[Route('/run/manager/stats', name: 'search_activities')]
+    public function searchRuns(Request $request, ManagerRegistry $doctrine): Response
+    {
+        $em = $doctrine->getManager();
+        $rep = $em->getRepository(Activity::class);
+
+        // Fetch the user's shoes (assuming there's a relation between User and Shoe entities)
+        $user = $this->getUser();
+        $shoes = $em->getRepository(Shoepair::class)->findBy(['userOwner' => $user]); // Customize based on your Shoe entity
+
+        // Create the form and pass the user's shoes as an option
+        $form = $this->createForm(SearchRunsType::class, null, ['shoepairUsed' => $shoes]); //??????????
+        $form->handleRequest($request);
+
+        $activities = [];
+        $totalRuns = 0;
+        $totalDistance = 0;
+        $averageDistance = 0;
+        $averageSpeedPerKm = 0;
+
+        // Handle form submission
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Fetch form data
+            $data = $form->getData();
+            $startDate = $data['startDate'];
+            $endDate = $data['endDate'];
+            $shoe = $data['shoe'];
+
+            // Convert end date to include full day
+            $endDate = $endDate->setTime(23, 59, 59);
+
+            // Build the query for activities within the date range
+            $qb = $rep->createQueryBuilder('a')
+                ->where('a.user = :user')
+                ->andWhere('a.activityDate BETWEEN :startDate AND :endDate')
+                ->setParameter('user', $user)
+                ->setParameter('startDate', $startDate)
+                ->setParameter('endDate', $endDate);
+
+            // Add shoe filter if a specific shoe is selected
+            if ($shoe) {
+                $qb->andWhere('a.shoe = :shoeId')
+                ->setParameter('shoeId', $shoe->getId());
+            }
+
+            $activities = $qb->getQuery()->getResult();
+
+            // Calculate total runs, distance, and averages
+            $totalRuns = count($activities);
+            $totalDistance = 0;
+            $totalDuration = 0;
+
+            foreach ($activities as $activity) {
+                $totalDistance += $activity->getDistance();
+                $totalDuration += $activity->getDuration();
+            }
+
+            // Calculate averages, ensuring no division by zero
+            if ($totalRuns > 0) {
+                $averageDistance = $totalDistance / $totalRuns;
+            }
+            if ($totalDistance > 0) {
+                $averageSpeedPerKm = $totalDuration / $totalDistance;
+            }
+        }
+
+        // Render the form and results
+        return $this->render('run_manager/stats_runs.html.twig', [
+            'form' => $form->createView(),
+            'activities' => $activities,
+            'totalRuns' => $totalRuns,
+            'totalDistance' => $totalDistance,
+            'averageDistance' => $averageDistance,
+            'averageSpeedPerKm' => $averageSpeedPerKm,
+        ]);
+    }
+
+
+
+
+
+    // #[Route('/run/manager/stats', name: 'search_activities')]
+    // public function searchRuns(Request $req, ManagerRegistry $doctrine): Response
+    // {
+    //     $em = $doctrine->getManager();
+    //     $rep = $em->getRepository(Activity::class);
+
+    //     // Fetch request parameters
+    //     $startDate = $req->query->get('startDate');
+    //     $endDate = $req->query->get('endDate');
+    //     $shoeId = $req->query->get('shoeId'); // Optional shoe filter
+
+    //     // Validate dates
+    //     if (!$startDate || !$endDate) {
+    //         return $this->render('run_manager/stats_runs.html.twig', [
+    //             'error' => 'Please provide a valid date range.',
+    //         ]);
+    //     }
+
+    //     // Convert dates into DateTime objects
+    //     $startDate = new \DateTime($startDate);
+    //     $endDate = (new \DateTime($endDate))->setTime(23, 59, 59);
+    //     // The last bit of the above line includes the full end day
+
+    //     // Build the base query
+    //     $qb = $rep->createQueryBuilder('a')
+    //     ->where('a.user = :user')
+    //     ->andWhere('a.activityDate BETWEEN :startDate AND :endDate')
+    //     ->setParameter('user', $this->getUser())
+    //     ->setParameter('startDate', $startDate)
+    //     ->setParameter('endDate', $endDate);
+
+    //     // Add shoe filter if provided
+    //     if ($shoeId) {
+    //         $qb->andWhere('a.shoe = :shoeId')
+    //         ->setParameter('shoeId', $shoeId);
+    //     }
+
+    //     // Execute the query to get activities
+    //     $activities = $qb->getQuery()->getResult();
+
+    //     // Calculate totals and averages
+    //     $totalRuns = count($activities);
+    //     $totalDistance = 0;
+    //     $totalDuration = 0; // For speed calculation
+
+    //     foreach ($activities as $activity) {
+    //         $totalDistance += $activity->getDistance(); // Assuming distance is in kilometers
+    //         $totalDuration += $activity->getDuration(); // Assuming duration is in minutes
+    //     }
+    
+    //     // Avoid division by zero
+    //     $averageDistance = $totalRuns > 0 ? $totalDistance / $totalRuns : 0;
+    //     $averageSpeedPerKm = $totalDistance > 0 ? $totalDuration / $totalDistance : 0; // Average time per km
+
+    //     // Render the results
+    //     return $this->render('run_manager/stats_runs.html.twig', [
+    //     'activities' => $activities,
+    //     'totalRuns' => $totalRuns,
+    //     'totalDistance' => $totalDistance,
+    //     'averageDistance' => $averageDistance,
+    //     'averageSpeedPerKm' => $averageSpeedPerKm,
+    //     ]);
+    // }
+
+
+
+
+
+
+
+
 }
 
 

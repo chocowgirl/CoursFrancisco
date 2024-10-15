@@ -1,12 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ShoeManagerController!{% endblock %}
+{% block title %}Shoe Manager{% endblock %}
 
 {% block body %}
 Shoe manager
 
 <style>
-		
+	
+	/* General styling for the body */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
 	.shoelegend {
 		display: flex;
 		padding:10px
@@ -39,6 +49,22 @@ Shoe manager
 		font-family: Arial, sans-serif;
 		margin:10px;
 	}
+
+	.overused-container{
+		display: flex;
+		flex-wrap: wrap;
+		background-color: #f5e642;
+		border-radius: 15px;
+		border-color: gray;
+		border-style: solid;
+		border-width: 1px;
+		padding: 10px;
+		width: 400px;
+		gap: 10px;
+		font-family: Arial, sans-serif;
+		margin:10px;
+	}
+
 	.item {
 		background-color: #a0a0a0;
 		border-radius: 10px;
@@ -48,6 +74,33 @@ Shoe manager
 		min-width: 80px;
 		color:white;
 	}
+
+	.km-item{
+		background-color: #a0a0a0;
+		border-radius: 10px;
+		padding: 10px;
+		text-align: center;
+		flex: 1;
+		min-width: 80px;
+		color:white;
+	}
+
+	.overused-km-item{
+		background-color: #a0a0a0;
+		border-radius: 10px;
+		padding: 10px;
+		text-align: center;
+		flex: 1;
+		min-width: 80px;
+		color:#b30909;
+		font-weight: bold;
+	}
+
+	    .over-wear-limit {
+        color: #b30909;
+        font-weight: bold;
+    }
+
 	.item-large {
 		flex: 2;
 		background: linear-gradient(90deg, orange, red);
@@ -100,10 +153,30 @@ Shoe manager
 		border-style: solid;
 		border-width: 1px;
 	}
+
+		.createShoeBtn {
+			background-color: #a0a0a0;
+			border-radius: 10px;
+			border-color: dark-gray;
+			border-style: solid;
+			border-width: 1px;
+			padding: 5px;
+			text-align: center;
+			min-width: 90px;
+			margin-left: 50px;
+		}
+
 </style>
-	<div class="homebtn">
-		<a href="{{ path('app_welcome')}}">🏠</a>
-	<div>
+
+	<div class='btnContainer'>
+		<div class="homebtn">
+			<a href="{{ path('app_welcome')}}">🏠</a>
+		<div>
+		
+		<div class="createShoeBtn">
+			<a href="{{ path ('create_shoe') }}">Add new shoes</a>
+		</div>
+	</div>
 
 	<div class="shoelegend">
 		<div class="shoelegendItem">Shoe</div>
@@ -113,29 +186,51 @@ Shoe manager
 	</div>
 	
 	{% for shoe in shoes %}
-
-		<div class="container">
-			<div class="item-large">
-				{{ shoe.nameBrandModel}}
+		{% if shoe.inActiveService == true %}
+			<div class="container {% if shoe.currentWearKm > shoe.wearLimitKm %}overused-container{% endif %}">
+				<div class="item-large">
+					{{ shoe.nameBrandModel}}
+				</div>
+				<div class="km-item {% if shoe.currentWearKm > shoe.wearLimitKm %}overused-km-item{% endif %}">
+					{{ shoe.currentWearKm }}
+				</div>
+				<div class="item">
+					{{ shoe.inActiveService }}
+				</div>
+				{# {{ dump (activity.shoepairUsed)}} #}
+				{# {{ dump (activity.activityDate)}} #}
+				<div class="edit-button">
+					<a href="{{ path('update_shoe', {id: shoe.id} )}}">{% if shoe.currentWearKm > shoe.wearLimitKm %}retire{%else%}edit{% endif %}</a>
+				</div>
+				<div class="notes">
+					{% if shoe.currentWearKm > shoe.wearLimitKm %}<span class="over-wear-limit">SHOE IS OVER DEFINED WEAR LIMIT</span>{% endif %}
+					{{shoe.shoeNote }}
+				</div>
 			</div>
-			<div class="item">
-				{{ shoe.currentWearKm }}
-			</div>
-			<div class="item">
-				{{ shoe.inActiveService }}
-			</div>
-			{# {{ dump (activity.shoepairUsed)}} #}
-			{# {{ dump (activity.activityDate)}} #}
-			<div class="edit-button">
-				{# <button>edit</button> #}
-				<a href="{{ path('update_shoe', {id: shoe.id} )}}">edit</a>
-			</div>
-			<div class="notes">
-				{{shoe.shoeNote }}
-			</div>
-		</div>
+		{% endif %}
 
 	{% endfor %}
 
+	{% for shoe in shoes %}
+    {% if shoe.inActiveService == false %}
+        <div class="container">
+            <div class="item-large">
+                {{ shoe.nameBrandModel }}
+            </div>
+            <div class="item">
+                {{ shoe.currentWearKm }}
+            </div>
+            <div class="item">
+                {{ shoe.inActiveService }}
+            </div>
+            <div class="edit-button">
+                <a href="{{ path('update_shoe', {id: shoe.id}) }}">edit</a>
+            </div>
+            <div class="notes">
+                {{ shoe.shoeNote }}
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
 
 {% endblock %}

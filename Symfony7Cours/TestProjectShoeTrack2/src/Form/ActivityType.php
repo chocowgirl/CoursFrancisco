@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Activity;
 use App\Entity\Shoepair;
 use App\Repository\ShoepairRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,6 +39,11 @@ class ActivityType extends AbstractType
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'name',
+                'query_builder'=> function(UserRepository $er) use ($user){
+                    return $er->createQueryBuilder('s')
+                    ->where('s.id = :connectedUser')
+                    ->setParameter('connectedUser', $user);
+                }
 
             ])
             ->add('shoepairUsed', EntityType::class, [

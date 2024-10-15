@@ -106,7 +106,7 @@
 			border-width: 1px;
 		}
 
-		.createRunBtn {
+		.createRunBtn, .runStatsBtn {
 			background-color: #a0a0a0;
 			border-radius: 10px;
 			border-color: dark-gray;
@@ -117,6 +117,8 @@
 			min-width: 90px;
 			margin-left: 50px;
 		}
+
+		
 	</style>
 	
 	<div class='btnContainer'>
@@ -126,6 +128,10 @@
 
 		<div class="createRunBtn">
 			<a href="{{ path ('create_activity') }}">Add new run</a>
+		</div>
+
+		<div class="runStatsBtn">
+			<a href="{{ path ('search_activities') }}">Run Statistics</a>
 		</div>
 	</div>
 

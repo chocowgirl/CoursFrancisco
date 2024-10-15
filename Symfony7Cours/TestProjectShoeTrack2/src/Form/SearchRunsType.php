@@ -27,15 +27,13 @@ class SearchRunsType extends AbstractType
             ->add('shoe', ChoiceType::class, [
                 'choices' => $options['shoes'], // Passed as options in the controller
                 'choice_label' => function($shoe) {
-                    return $shoe->getName(); // Customize this based on your shoe entity
+                    return $shoe->getNameBrandModel(); // Customize this based on your shoe entity
                 },
                 'label' => 'Filter by Shoe (Optional)',
                 'required' => false,
                 'placeholder' => 'All Shoes',
-            ])
-            ->add('search', SubmitType::class, [
-                'label' => 'Search',
             ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -8,7 +8,7 @@
 		{{ form_row(form.startDate) }}
 		{{ form_row(form.endDate) }}
 		{{ form_row(form.shoe) }}
-		<button type="submit">{{ form.search.vars.label }}</button>
+		<button type="submit">Search</button>
 	{{ form_end(form) }}
 
 	{% if activities is not empty %}
@@ -20,7 +20,7 @@
 
 		<ul>
 			{% for activity in activities %}
-				<li>{{ activity.activityDate|date('Y-m-d') }} - {{ activity.distance }} km - {{ activity.duration }} minutes</li>
+				<li>{{ activity.activityDate|date('Y-m-d') }} - {{ activity.activityDistanceKm }} km - {{ activity.activityChronoMin }} minutes</li>
 			{% endfor %}
 		</ul>
 	{% else %}

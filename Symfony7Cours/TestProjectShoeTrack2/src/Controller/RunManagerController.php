@@ -106,17 +106,20 @@ class RunManagerController extends AbstractController
 
     
     #[Route('/run/manager/stats', name: 'search_activities')]
-    public function searchRuns(Request $request, ManagerRegistry $doctrine): Response
-    {
+    public function searchRuns(
+        Request $request, 
+        ActivityRepository $rep, 
+        ManagerRegistry $doctrine
+        ): Response {
         $em = $doctrine->getManager();
         $rep = $em->getRepository(Activity::class);
 
         // Fetch the user's shoes (assuming there's a relation between User and Shoe entities)
         $user = $this->getUser();
-        $shoes = $em->getRepository(Shoepair::class)->findBy(['userOwner' => $user]); // Customize based on your Shoe entity
+        $shoes = $em->getRepository(Shoepair::class)->findBy(['userOwner' => $user]);
 
         // Create the form and pass the user's shoes as an option
-        $form = $this->createForm(SearchRunsType::class, null, ['shoepairUsed' => $shoes]); //??????????
+        $form = $this->createForm(SearchRunsType::class, null, ['shoes' => $shoes]); 
         $form->handleRequest($request);
 
         $activities = [];
@@ -146,7 +149,7 @@ class RunManagerController extends AbstractController
 
             // Add shoe filter if a specific shoe is selected
             if ($shoe) {
-                $qb->andWhere('a.shoe = :shoeId')
+                $qb->andWhere('a.shoepairUsed = :shoeId')
                 ->setParameter('shoeId', $shoe->getId());
             }
 
@@ -156,12 +159,15 @@ class RunManagerController extends AbstractController
             $totalRuns = count($activities);
             $totalDistance = 0;
             $totalDuration = 0;
+            // dd($activities);
+            // dd($totalRuns);
 
             foreach ($activities as $activity) {
-                $totalDistance += $activity->getDistance();
-                $totalDuration += $activity->getDuration();
+                $totalDistance += $activity->getActivityDistanceKm();
+                $totalDuration += $activity->getActivityChronoMin();
             }
-
+            // dd($totalDistance);
+            
             // Calculate averages, ensuring no division by zero
             if ($totalRuns > 0) {
                 $averageDistance = $totalDistance / $totalRuns;

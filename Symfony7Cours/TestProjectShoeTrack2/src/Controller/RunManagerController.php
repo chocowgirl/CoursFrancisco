@@ -159,23 +159,31 @@ class RunManagerController extends AbstractController
             $totalRuns = count($activities);
             $totalDistance = 0;
             $totalDuration = 0;
-            // dd($activities);
-            // dd($totalRuns);
+            // dd($activities);  WORKS HERE
+            // dd($totalRuns);  WORKS HERE 
 
             foreach ($activities as $activity) {
                 $totalDistance += $activity->getActivityDistanceKm();
                 $totalDuration += $activity->getActivityChronoMin();
             }
-            // dd($totalDistance);
-            
+            // dd($totalDistance);  WORKS HERE
+            // dd($totalDuration); WORKS HERE
+            // dd($totalRuns);  WORKS HERE
+
             // Calculate averages, ensuring no division by zero
             if ($totalRuns > 0) {
-                $averageDistance = $totalDistance / $totalRuns;
+                $averageDistance = ($totalDistance / $totalRuns);
+            }else {$averageDistance = 0;
             }
+
             if ($totalDistance > 0) {
-                $averageSpeedPerKm = $totalDuration / $totalDistance;
+                $averageSpeedPerKm = ($totalDuration / $totalDistance);
+            }
+            else {$averageSpeedPerKm = 0;
             }
         }
+        // dd($averageDistance);
+        // dd($averageSpeedPerKm);
 
         // Render the form and results
         return $this->render('run_manager/stats_runs.html.twig', [
@@ -242,9 +250,9 @@ class RunManagerController extends AbstractController
     //         $totalDuration += $activity->getDuration(); // Assuming duration is in minutes
     //     }
     
-    //     // Avoid division by zero
-    //     $averageDistance = $totalRuns > 0 ? $totalDistance / $totalRuns : 0;
-    //     $averageSpeedPerKm = $totalDistance > 0 ? $totalDuration / $totalDistance : 0; // Average time per km
+        // // Avoid division by zero
+        // $averageDistance = $totalRuns > 0 ? $totalDistance / $totalRuns : 0;
+        // $averageSpeedPerKm = $totalDistance > 0 ? $totalDuration / $totalDistance : 0; // Average time per km
 
     //     // Render the results
     //     return $this->render('run_manager/stats_runs.html.twig', [
